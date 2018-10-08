@@ -152,7 +152,7 @@
           description: "the gem cache will remain in this layer making the layer unnecessarily large"
           reference_url: 
             - "http://docs.projectatomic.io/container-best-practices/#"
-            - "_clear_packaging_caches_and_temporary_package_downloads" 
+            - "_clear_packaging_caches_and_temporary_package_downloads"
         -
           label: "no_apt-get_clean"
           regex: /apt-get install(?!.+clean)/g
@@ -161,7 +161,16 @@
           description: "the apt-get cache will remain in this layer making the layer unnecessarily large"
           reference_url: 
             - "http://docs.projectatomic.io/container-best-practices/#"
-            - "_clear_packaging_caches_and_temporary_package_downloads" 
+            - "_clear_packaging_caches_and_temporary_package_downloads"
+        -
+          label: "no_apt_clean"
+          regex: /apt install(?!.+clean)/g
+          level: "info"
+          message: "apt clean is not used"
+          description: "the apt cache will remain in this layer making the layer unnecessarily large"
+          reference_url:
+            - "http://docs.projectatomic.io/container-best-practices/#"
+            - "_clear_packaging_caches_and_temporary_package_downloads"
         -
           label: "privileged_run_container"
           regex: /privileged/
@@ -214,13 +223,13 @@
       paramSyntaxRegex: /.+/
       rules: []
   required_instructions: 
-    - 
+    -
       instruction: "EXPOSE"
       count: 1
       level: "info"
       message: "There is no 'EXPOSE' instruction"
       description: "Without exposed ports how will the service of the container be accessed?"
-      reference_url: 
+      reference_url:
         - "https://docs.docker.com/engine/reference/builder/"
         - "#expose"
     - 
