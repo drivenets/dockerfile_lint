@@ -202,7 +202,15 @@
       rules: []
     ENTRYPOINT:
       paramSyntaxRegex: /.+/
-      rules: []
+      rules:
+        -
+          label: "is_dumb_init"
+          regex: /\[\"(?!.+dumb-init).+\"\]/
+          level: "error"
+          message: "always use dumb-init"
+          description: "always use dumb-init"
+          reference_url:
+            - "https://drivenets.atlassian.net/wiki/spaces/DNDOPS/pages/905543779/Dockerfiles+best-practice"
     VOLUME:
       paramSyntaxRegex: /.+/
       rules: []
@@ -215,17 +223,16 @@
     ONBUILD: 
       paramSyntaxRegex: /.+/
       rules: []
-  required_instructions: 
-#    -
-#      instruction: "EXPOSE"
-#      count: 1
-#      level: "info"
-#      message: "There is no 'EXPOSE' instruction"
-#      description: "Without exposed ports how will the service of the container be accessed?"
-#      reference_url:
-#        - "https://docs.docker.com/engine/reference/builder/"
-#        - "#expose"
-    - 
+  required_instructions:
+    -
+      instruction: "ENTRYPOINT"
+      count: 1
+      level: "error"
+      message: "There is no 'ENTRYPOINT' instruction"
+      description: "None"
+      reference_url:
+        - "https://drivenets.atlassian.net/wiki/spaces/DNDOPS/pages/905543779/Dockerfiles+best-practice"
+    -
       instruction: "CMD"
       count: 1
       level: "info"
