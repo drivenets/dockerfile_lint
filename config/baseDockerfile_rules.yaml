@@ -1,7 +1,7 @@
 ---
   profile:
-    name: "Default"
-    description: "Default Profile. Checks basic syntax."
+    name: "baseDockerfile"
+    description: "baseDockerfile Profile. Checks basic syntax."
     includes:
       #- recommended_label_rules.yaml
   line_rules:
@@ -107,39 +107,47 @@
             - "#maintainer-in-dockerfile"
     RUN: 
       paramSyntaxRegex: /.+/
-      rules:
+      rules: 
+        - 
+          label: "no_yum_clean_all"
+          regex: /yum(?!.+clean all|.+\.repo|-config|\.conf)/
+          level: "warn"
+          message: "yum clean all is not used"
+          description: "the yum cache will remain in this layer making the layer unnecessarily large"
+          reference_url: 
+            - "http://docs.projectatomic.io/container-best-practices/#_clearing_packaging_caches_and_temporary_package_downloads"
+        - 
+          label: "yum_update_all"
+          regex: /yum(.+update all|.+upgrade|.+update)/
+          level: "info"
+          message: "updating the entire base image may add unnecessary size to the container"
+          description: "update the entire base image may add unnecessary size to the container"
+          reference_url: 
+            - "http://docs.projectatomic.io/container-best-practices/#_clearing_packaging_caches_and_temporary_package_downloads"
         -
-          label: "apt-get_update_usage"
-          regex: /apt-get update/
-          level: "error"
-          message: "apt-get is used"
-          description: "the 'apt-get update' must be used in baseDockerfile only"
-          reference_url:
-            - "https://drivenets.atlassian.net/wiki/spaces/DNDOPS/pages/905543779/Dockerfiles+best-practice"
+          label: "no_dnf_clean_all"
+          regex: /dnf(?!.+clean all|.+\.repo)/g
+          level: "warn"
+          message: "dnf clean all is not used"
+          description: "the dnf cache will remain in this layer making the layer unnecessarily large"
+          reference_url: 
+            - "http://docs.projectatomic.io/container-best-practices/#_clearing_packaging_caches_and_temporary_package_downloads"
         -
-          label: "apt-get_install_usage"
-          regex: /apt-get install/
-          level: "error"
-          message: "apt-get is used"
-          description: "the 'apt-get update' must be used in baseDockerfile only"
-          reference_url:
-            - "https://drivenets.atlassian.net/wiki/spaces/DNDOPS/pages/905543779/Dockerfiles+best-practice"
+          label: "no_rvm_cleanup_all"
+          regex: /rvm install(?!.+cleanup all)/g
+          level: "warn"
+          message: "rvm cleanup is not used"
+          description: "the rvm cache will remain in this layer making the layer unnecessarily large"
+          reference_url: 
+            - "http://docs.projectatomic.io/container-best-practices/#_clearing_packaging_caches_and_temporary_package_downloads"
         -
-          label: "apt_update_usage"
-          regex: /apt update/
-          level: "error"
-          message: "apt is used"
-          description: "the 'apt update' must be used in baseDockerfile only"
-          reference_url:
-            - "https://drivenets.atlassian.net/wiki/spaces/DNDOPS/pages/905543779/Dockerfiles+best-practice"
-        -
-          label: "apt_install_usage"
-          regex: /apt install/
-          level: "error"
-          message: "apt is used"
-          description: "the 'apt update' must be used in baseDockerfile only"
-          reference_url:
-            - "https://drivenets.atlassian.net/wiki/spaces/DNDOPS/pages/905543779/Dockerfiles+best-practice"
+          label: "no_gem_clean_all"
+          regex: /gem install(?!.+cleanup|.+\rvm cleanup all)/g
+          level: "warn"
+          message: "gem cleanup all is not used"
+          description: "the gem cache will remain in this layer making the layer unnecessarily large"
+          reference_url: 
+            - "http://docs.projectatomic.io/container-best-practices/#_clearing_packaging_caches_and_temporary_package_downloads"
         -
           label: "no_apt-get_clean"
           regex: /apt-get install(?!.+clean)/g
@@ -194,15 +202,7 @@
       rules: []
     ENTRYPOINT:
       paramSyntaxRegex: /.+/
-      rules:
-        -
-          label: "is_dumb_init"
-          regex: /\[\"(?!.+dumb-init).+\"\]/
-          level: "error"
-          message: "always use dumb-init"
-          description: "always use dumb-init"
-          reference_url:
-            - "https://drivenets.atlassian.net/wiki/spaces/DNDOPS/pages/905543779/Dockerfiles+best-practice"
+      rules: []
     VOLUME:
       paramSyntaxRegex: /.+/
       rules: []
@@ -215,21 +215,4 @@
     ONBUILD: 
       paramSyntaxRegex: /.+/
       rules: []
-  required_instructions:
-    -
-      instruction: "ENTRYPOINT"
-      count: 1
-      level: "error"
-      message: "There is no 'ENTRYPOINT' instruction"
-      description: "None"
-      reference_url:
-        - "https://drivenets.atlassian.net/wiki/spaces/DNDOPS/pages/905543779/Dockerfiles+best-practice"
-    -
-      instruction: "CMD"
-      count: 1
-      level: "info"
-      message: "There is no 'CMD' instruction"
-      description: "None"
-      reference_url: 
-        - "https://docs.docker.com/engine/reference/builder/"
-        - "#cmd"
+  required_instructions: []
