@@ -1,7 +1,7 @@
 ---
   profile:
-    name: "Default"
-    description: "Default Profile. Checks basic syntax."
+    name: "baseDockerfile"
+    description: "baseDockerfile Profile. Checks basic syntax."
     includes:
       #- recommended_label_rules.yaml
   line_rules:
