@@ -142,7 +142,7 @@
             - "https://drivenets.atlassian.net/wiki/spaces/DNDOPS/pages/905543779/Dockerfiles+best-practice"
         -
           label: "no_apt-get_clean"
-          regex: /apt-get (update|install).+/
+          regex: /apt-get install(?!.+clean)/g
           level: "info"
           message: "apt-get clean is not used"
           description: "the apt-get cache will remain in this layer making the layer unnecessarily large"
