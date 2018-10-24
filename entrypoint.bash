@@ -11,7 +11,7 @@ for docker_file in $(find . -name baseDockerfile); do
     fi
 done
 
-for docker_file in $(find . -name Dockerfile); do
+for docker_file in $(find . -type f -name Dockerfile); do
     echo
     echo "Checking ${docker_file} ..."
     dockerfile_lint -j -f ${docker_file} | jq . > output.log
